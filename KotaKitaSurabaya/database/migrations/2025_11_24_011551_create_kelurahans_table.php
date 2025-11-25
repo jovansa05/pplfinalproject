@@ -1,0 +1,26 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('kelurahans', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('kecamatan_id');
+            $table->string('name');
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+
+            $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('cascade');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('kelurahans');
+    }
+};
