@@ -9,7 +9,7 @@
 </head>
 
 <body class="relative bg-cover bg-center bg-no-repeat min-h-screen"
-      style="background-image: url('/images/sura-baya.jpg');">
+      style="background-image: url('/images/hero-bg.jpg');">
 
     <!-- Overlay soft -->
     <div class="absolute inset-0 bg-white/10 backdrop-blur-[1px]"></div>
