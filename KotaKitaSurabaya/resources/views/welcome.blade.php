@@ -117,8 +117,8 @@
                 <span class="text-xl font-bold tracking-tight">KotaKita Surabaya</span>
             </div>
             <div class="text-center md:text-right text-gray-400 text-sm">
-                <p>&copy; 2025 Kelompok 3 Sistem Informasi - Telkom University.</p>
-                <p class="mt-1">Dibuat dengan ❤️ untuk Kota Pahlawan.</p>
+                <p>&copy; 2025 Sistem Informasi - Telkom University.</p>
+                <p class="mt-1">Dibuat untuk Kota Pahlawan.</p>
             </div>
         </div>
     </footer>
