@@ -21,7 +21,7 @@
             <!-- Logo dan Judul -->
             <div class="text-center mb-6">
                 <img src="/images/logo_surabaya.png" alt="Logo Surabaya"
-                     class="mx-auto w-28 h-28 object-contain mb-3 drop-shadow-md">
+                    class="mx-auto max-w-[140px] w-full object-contain mb-3 drop-shadow-md hover:scale-105 transition">
                 <h2 class="text-3xl font-extrabold text-green-600 drop-shadow-sm tracking-wide">
                     KotaKita Surabaya
                 </h2>
