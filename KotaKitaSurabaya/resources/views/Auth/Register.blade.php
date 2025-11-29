@@ -11,14 +11,11 @@
 <body class="relative bg-cover bg-center bg-no-repeat min-h-screen"
       style="background-image: url('/images/hero-bg.jpg');">
 
-    <!-- Overlay lebih terang & fresh -->
-    <div class="absolute inset-1 bg-white/1 backdrop-blur-[2px]"></div>
-
+    <div class="absolute inset-0 bg-black/10"></div>
     <div class="relative z-10 flex justify-center items-center min-h-screen px-4">
         <div class="bg-white/30 backdrop-blur-xl rounded-3xl p-8 w-full max-w-sm
             border border-white/40 shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-300">
 
-            <!-- Logo dan Judul -->
             <div class="text-center mb-6">
                 <img src="/images/logo_surabaya.png" alt="Logo Surabaya"
                     class="mx-auto max-w-[140px] w-full object-contain mb-3 drop-shadow-md hover:scale-105 transition">
@@ -93,14 +90,12 @@
                     </div>
                 </div>
 
-                <!-- Button -->
                 <button class="w-full py-3 rounded-xl bg-green-600 hover:bg-green-700 shadow-md 
                                transition-transform hover:scale-105 active:scale-95 text-white font-semibold">
                     Buat Akun 
                 </button>
             </form>
 
-            <!-- Login -->
             <p class="text-center text-green-950 font-medium mt-4 text-sm">
                 Sudah punya akun?
                 <a href="/login" class="text-blue-900 hover:underline font-semibold">

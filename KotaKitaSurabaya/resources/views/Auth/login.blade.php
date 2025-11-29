@@ -13,7 +13,6 @@
 
 
     <div class="absolute inset-0 bg-black/10"></div>
-
     <div class="relative z-10 flex justify-center items-center min-h-screen px-4">
         <div class="bg-white/40 backdrop-blur-xl rounded-3xl p-8 w-full max-w-sm
                     border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all duration-300">
@@ -76,7 +75,7 @@
 
             <p class="text-center text-green-900 mt-6 text-sm font-medium">
                 Belum punya akun?
-                <a href="{{ route('register') }}" class="text-green-700 hover:text-green-500 hover:underline font-bold transition">
+                <a href="{{ route('register') }}" class="text-blue-900 hover:underline font-semibold">
                     Daftar Sekarang
                 </a>
             </p>
