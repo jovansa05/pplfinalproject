@@ -47,7 +47,7 @@
     </nav>
 
     <section class="relative h-screen flex items-center justify-center bg-cover bg-center bg-fixed" 
-             style="background-image: url('{{ asset('images/hero-bg.jpg') }}');">
+             style="background-image: url('/images/hero-bg.jpg');">
         
         <div class="absolute inset-0 bg-black/50"></div>
         <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent"></div>
@@ -117,7 +117,11 @@
                 <span class="text-xl font-bold tracking-tight">KotaKita Surabaya</span>
             </div>
             <div class="text-center md:text-right text-gray-400 text-sm">
+<<<<<<< HEAD
                 <p>&copy; 2025 Kelompok 3 Sistem Informasi - Telkom University.</p>
+=======
+                <p>&copy; 2025 Sistem Informasi - Telkom University.</p>
+>>>>>>> e7bebc99d01491601a40954007c52088df6507e8
                 <p class="mt-1">Dibuat untuk Kota Pahlawan.</p>
             </div>
         </div>

@@ -9,9 +9,10 @@
 </head>
 
 <body class="relative bg-cover bg-center bg-no-repeat min-h-screen"
-      style="background-image: url('{{ asset('images/hero-bg.jpg') }}');">
+      style="background-image: url('/images/auth-bg.jpg');">
 
-    <div class="absolute inset-0 bg-white/10 backdrop-blur-[2px]"></div>
+
+    <div class="absolute inset-0 bg-black/10"></div>
 
     <div class="relative z-10 flex justify-center items-center min-h-screen px-4">
         <div class="bg-white/40 backdrop-blur-xl rounded-3xl p-8 w-full max-w-sm
