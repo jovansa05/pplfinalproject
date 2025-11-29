@@ -9,9 +9,10 @@
 </head>
 
 <body class="relative bg-cover bg-center bg-no-repeat min-h-screen"
-      style="background-image: url('{{ asset('images/hero-bg.jpg') }}');">
+      style="background-image: url('/images/auth-bg.jpg');">
 
-    <div class="absolute inset-0 bg-white/10 backdrop-blur-[2px]"></div>
+
+    <div class="absolute inset-0 bg-black/10"></div>
 
     <div class="relative z-10 flex justify-center items-center min-h-screen px-4">
         <div class="bg-white/40 backdrop-blur-xl rounded-3xl p-8 w-full max-w-sm
@@ -19,7 +20,7 @@
 
             <div class="text-center mb-6">
                 <img src="{{ asset('images/logo_surabaya.png') }}" alt="Logo Surabaya"
-                     class="mx-auto w-24 h-24 object-contain mb-3 drop-shadow-md hover:scale-105 transition">
+                    class="mx-auto max-w-[140px] w-full object-contain mb-3 drop-shadow-md hover:scale-105 transition">
                 <h2 class="text-3xl font-extrabold text-green-800 tracking-wide drop-shadow-sm">
                     Selamat Datang!
                 </h2>
@@ -42,7 +43,7 @@
                     <input type="email" name="email" value="{{ old('email') }}" required autofocus
                         class="w-full p-3 rounded-xl bg-white/80 border border-white/50 text-gray-900 
                                focus:ring-2 focus:ring-green-500 focus:outline-none shadow-inner placeholder-gray-500"
-                        placeholder="email@contoh.com">
+                        placeholder="email@gmail.com">
                 </div>
 
                 <div>
@@ -69,7 +70,7 @@
                 <button type="submit"
                     class="w-full py-3 mt-4 rounded-xl bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-green-500/30
                            transition-all transform hover:-translate-y-0.5 text-white font-bold tracking-wide text-lg">
-                    Masuk 🔓
+                    Masuk 
                 </button>
             </form>
 
