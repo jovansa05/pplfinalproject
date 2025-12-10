@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController; 
+use App\Models\Kelurahan; 
+use App\Models\Report;    
+use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,25 +17,30 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/get-villages/{id}', function ($id) {
+    return Kelurahan::where('kecamatan_id', $id)->get();
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Dashboard
+    // Dashboard dengan Statistik
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        $userId = Auth::id();
+        
+        // Hitung Data Laporan User
+        $total    = Report::where('user_id', $userId)->count();
+        $pending  = Report::where('user_id', $userId)->where('status', 'pending')->count();
+        $process  = Report::where('user_id', $userId)->where('status', 'proses')->count();
+        $completed= Report::where('user_id', $userId)->where('status', 'selesai')->count();
+
+        // Kirim data ke view dashboard
+        return view('dashboard', compact('total', 'pending', 'process', 'completed'));
     })->name('dashboard');
 
-    // RUTE SEMENTARA UNTUK LAPORAN
-    // Kita buat rute "dummy" dulu supaya dashboard tidak error
-
-    // Tombol "Buat Laporan Baru"
-    Route::get('/laporan/buat', function () {
-        return "🚧 Halaman Buat Laporan (Akan dikerjakan di Sprint Laporan)";
-    })->name('reports.create');
-
-    // Tombol "Lihat Status Laporan"
-    Route::get('/laporan/riwayat', function () {
-        return "🚧 Halaman Riwayat Laporan (Akan dikerjakan di Sprint Laporan)";
-    })->name('reports.index');
+    // Fitur laporan
+    Route::get('/laporan/buat', [ReportController::class, 'create'])->name('reports.create');
+    Route::post('/laporan/simpan', [ReportController::class, 'store'])->name('reports.store');
+    Route::get('/laporan/riwayat', [ReportController::class, 'index'])->name('reports.index');
 });
 
 // Route Profile

@@ -36,7 +36,7 @@ class AuthServiceProvider extends ServiceProvider
                     'token' => $token,
                     'email' => $notifiable->getEmailForPasswordReset(),
                 ], false)))
-                ->line('Link reset password ini akan kadaluarsa dalam 60 menit.')
+                ->line('Link reset password ini akan kadaluarsa dalam 30 detik.')
                 ->line('Jika Anda tidak meminta reset password, abaikan saja email ini.')
                 ->salutation('Salam, Admin KotaKita');
         });

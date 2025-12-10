@@ -10,22 +10,27 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+
+            // Nomer Tiket Unik
             $table->string('ticket_number')->unique();
-            $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('kecamatan_id');
-            $table->unsignedBigInteger('kelurahan_id');
-            $table->text('description');
-            $table->string('photo_path');
+            
+            // Relasi ke User & Category
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            
+            // Data Laporan
+            $table->string('image');        // Foto Bukti
+            $table->text('description');    // Deskripsi
+            $table->string('location');     // Alamat / Lokasi
+            
+            // Koordinat 
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
-            $table->enum('status', ['pending', 'verified', 'in_progress', 'completed', 'rejected'])->default('pending');
+            
+            // Status Laporan
+            $table->enum('status', ['pending', 'proses', 'selesai'])->default('pending');
+            
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('restrict');
-            $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('restrict');
-            $table->foreign('kelurahan_id')->references('id')->on('kelurahans')->onDelete('restrict');
         });
     }
 
