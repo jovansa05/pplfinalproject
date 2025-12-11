@@ -18,7 +18,7 @@
                             Hai, {{ explode(' ', Auth::user()->name)[0] }}! 👋
                         </h2>
                         <p class="text-green-100 text-lg font-medium opacity-90">
-                            Mau laporin apa hari ini?
+                            Ada Laporan apa hari ini?
                         </p>
                     </div>
                 </div>
