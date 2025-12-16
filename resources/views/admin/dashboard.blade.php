@@ -86,10 +86,16 @@
         </div>
 
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
-            <div class="px-6 py-5 border-b border-gray-100">
+            <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
                 <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
                     📋 Laporan Terbaru
                 </h3>
+                <a href="{{ route('admin.reports.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 font-bold text-sm rounded-xl hover:bg-indigo-100 transition">
+                    Lihat Semua
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
             </div>
             
             <div class="overflow-x-auto">
