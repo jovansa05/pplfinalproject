@@ -24,10 +24,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        // Jika di database kamu SUDAH ada kolom kecamatan/kelurahan, aktifkan baris ini:
-        // 'kecamatan_id',
-        // 'kelurahan_id',
-        // 'role',
+        'kecamatan_id',
+        'kelurahan_id',
+        'role',
     ];
 
     /**
