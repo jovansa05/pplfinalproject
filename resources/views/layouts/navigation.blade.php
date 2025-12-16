@@ -3,7 +3,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+                    <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}" class="flex items-center gap-3">
                         <img src="{{ asset('images/logo_surabaya.png') }}" alt="Logo Surabaya" 
                              class="block h-10 w-auto hover:scale-105 transition duration-300 drop-shadow-sm">
                         <span class="font-bold text-xl tracking-tight text-green-700">KotaKita Surabaya</span>
@@ -11,13 +11,19 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-900 hover:text-green-600 font-medium">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    
-                    <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" class="text-gray-900 hover:text-green-600 font-medium">
-                        {{ __('Riwayat Laporan') }}
-                    </x-nav-link>
+                    @if(Auth::user()->role === 'admin')
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="text-gray-900 hover:text-green-600 font-medium">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    @else
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-900 hover:text-green-600 font-medium">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                        
+                        <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" class="text-gray-900 hover:text-green-600 font-medium">
+                            {{ __('Riwayat Laporan') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -66,13 +72,19 @@
 
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-t border-gray-100">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            
-            <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
-                {{ __('Riwayat Laporan') }}
-            </x-responsive-nav-link>
+            @if(Auth::user()->role === 'admin')
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+            @else
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+                
+                <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
+                    {{ __('Riwayat Laporan') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200 bg-gray-50">

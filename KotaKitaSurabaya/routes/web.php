@@ -23,7 +23,7 @@ Route::get('/get-villages/{id}', function ($id) {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Dashboard dengan Statistik
+    // Dashboard User dengan Statistik
     Route::get('/dashboard', function () {
         $userId = Auth::id();
         
@@ -36,6 +36,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Kirim data ke view dashboard
         return view('dashboard', compact('total', 'pending', 'process', 'completed'));
     })->name('dashboard');
+
+    // Dashboard Admin
+    Route::get('/admin/dashboard', function () {
+        // Pastikan hanya admin yang bisa akses
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized access.');
+        }
+        
+        // Statistik untuk admin (semua laporan)
+        $total    = Report::count();
+        $pending  = Report::where('status', 'pending')->count();
+        $process  = Report::where('status', 'proses')->count();
+        $completed= Report::where('status', 'selesai')->count();
+
+        // Kirim data ke view admin dashboard (bisa menggunakan view yang sama atau berbeda)
+        return view('dashboard', compact('total', 'pending', 'process', 'completed'));
+    })->name('admin.dashboard');
 
     // Fitur laporan
     Route::get('/laporan/buat', [ReportController::class, 'create'])->name('reports.create');
