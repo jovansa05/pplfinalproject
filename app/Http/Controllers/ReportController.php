@@ -12,7 +12,7 @@ class ReportController extends Controller
 {
     public function index()
     {
-        $reports = Report::where('user_id', Auth::id())->latest()->get();
+        $reports = Report::with('category')->where('user_id', Auth::id())->latest()->get();
         
         return view('reports.index', compact('reports'));
     }
