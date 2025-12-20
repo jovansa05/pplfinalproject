@@ -46,8 +46,17 @@
 
                         <tbody class="space-y-4">
                             @foreach($reports as $report)
-                                <tr class="bg-white rounded-2xl shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all duration-300 border border-gray-100 group">
-                                    
+                                <tr class="report-row bg-white rounded-2xl shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all duration-300 border border-gray-100 group cursor-pointer"
+                                    data-ticket="{{ $report->ticket_number }}"
+                                    data-category="{{ $report->category->name ?? 'Lainnya' }}"  
+                                    data-date="{{ $report->created_at->format('d M Y H:i') }} WIB"
+                                    data-status="{{ $report->status }}"
+                                    data-location="{{ $report->location }}"
+                                    data-latitude="{{ $report->latitude }}"
+                                    data-longitude="{{ $report->longitude }}"
+                                    data-description="{{ $report->description }}"
+                                    data-image="{{ asset('storage/' . $report->image) }}">
+
                                     <td class="px-6 py-5 rounded-l-2xl">
                                         <div class="flex flex-col gap-2">
                                             <span class="font-mono text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md w-fit border border-blue-100">
@@ -122,7 +131,136 @@
                 </div>
 
             @endif
-
+            <div id="reportModal"
+                class="fixed inset-0 hidden bg-black/50 z-50 items-center justify-center">
+            </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('tbody').addEventListener('click', function (e) {
+                const row = e.target.closest('.report-row');
+                if (!row) return;
+                openReportModal(row);
+            });
+        });
+
+        
+        function openReportModal(row) {
+            const modal = document.getElementById('reportModal');
+
+            const statusMap = {
+                pending: {
+                    text: 'MENUNGGU',
+                    class: 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                },
+                proses: {
+                    text: 'DIPROSES',
+                    class: 'bg-blue-50 text-blue-700 border-blue-200'
+                },
+                selesai: {
+                    text: 'SELESAI',
+                    class: 'bg-green-50 text-green-700 border-green-200'
+                }
+            };
+
+            const status = statusMap[row.dataset.status] ?? {
+                text: row.dataset.status.toUpperCase(),
+                class: 'bg-gray-100 text-gray-700 border-gray-300'
+            };
+
+            modal.innerHTML = `
+            <div class="absolute inset-0" onclick="closeReportModal()"></div>
+
+                <div onclick="event.stopPropagation()"
+                    class="bg-white rounded-3xl max-w-xl w-full mx-4 shadow-2xl relative z-10 animate-scaleIn overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="p-5 border-b flex justify-between items-center bg-gray-50">
+                    <div class="flex items-center gap-3">
+                        <img src="/images/logo_surabaya.png"
+                            class="w-15 h-14 object-contain">
+                        <div>
+                            <p class="text-sm font-bold text-green-700">KotaKita Surabaya</p>
+                            <span class="text-xs text-gray-500">Laporan Anda</span>
+                        </div>
+                    </div>
+
+                    <button onclick="closeReportModal()"
+                            class="text-gray-400 hover:text-red-500 text-2xl">&times;</button>
+                </div>
+
+                <!-- META -->
+                <div class="px-6 pt-4 flex items-center justify-between">
+
+                   
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border">
+                            #${row.dataset.ticket}
+                        </span>
+
+                    </div>
+
+                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold border ${row.dataset.date}">
+                      ${row.dataset.date}
+                    </span>
+
+                </div>
+
+
+                <!-- IMAGE -->
+                <div class="relative mt-4">
+                    <img src="${row.dataset.image}" class="w-full h-60 object-cover">
+                    <div class="absolute bottom-3 left-3 bg-white/90 px-3 py-1 rounded-full text-xs font-bold shadow">
+                        ${row.dataset.category}
+                    </div>
+                </div>
+
+                <!-- CONTENT -->
+                <div class="p-6 space-y-4">
+
+                    <!-- DESKRIPSI -->
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-500 uppercase mb-1">Deskripsi</h3>
+                        <p class="text-gray-700">${row.dataset.description}</p>
+                    </div>
+
+                    <!-- LOKASI -->
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-500 uppercase mb-1">Lokasi</h3>
+                        <p class="text-gray-700 flex gap-2">📍 ${row.dataset.location}</p>
+                    </div>
+
+                    <!-- STATUS + MAPS (SEJAJAR, MAPS KIRI - STATUS KANAN) -->
+                    <div class="flex items-center justify-between pt-2">
+
+                       
+                        <a href="https://www.google.com/maps/search/?api=1&query=${row.dataset.latitude},${row.dataset.longitude}"
+                        target="_blank"
+                        class="inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:underline">
+                            🗺️ Lihat di Google Maps
+                        </a>
+                        
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold border ${status.class}">
+                            <span class="w-2 h-2 rounded-full bg-current animate-pulse"></span>
+                            ${status.text}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeReportModal() {
+            const modal = document.getElementById('reportModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        </script>
+
+
 </x-app-layout>
