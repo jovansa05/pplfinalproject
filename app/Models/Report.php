@@ -20,6 +20,8 @@ class Report extends Model
         'latitude',
         'longitude',
         'status',
+        'admin_note',
+        'completion_proof',
     ];
 
     public function user()

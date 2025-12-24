@@ -19,10 +19,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Route untuk AJAX Wilayah
 Route::get('/get-villages/{id}', function ($id) {
     return Kelurahan::where('kecamatan_id', $id)->get();
 });
 
+// --- ROUTE UNTUK USER (WARGA) ---
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboard dengan Statistik
@@ -35,24 +37,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $process  = Report::where('user_id', $userId)->where('status', 'proses')->count();
         $completed= Report::where('user_id', $userId)->where('status', 'selesai')->count();
 
-        // Kirim data ke view dashboard
         return view('dashboard', compact('total', 'pending', 'process', 'completed'));
     })->name('dashboard');
 
-    // Fitur laporan
+    // Fitur Laporan
     Route::get('/laporan/buat', [ReportController::class, 'create'])->name('reports.create');
     Route::post('/laporan/simpan', [ReportController::class, 'store'])->name('reports.store');
     Route::get('/laporan/riwayat', [ReportController::class, 'index'])->name('reports.index');
+    
+    // 👇 INI ROUTE BARU (Halaman Detail Laporan)
+    Route::get('/laporan/detail/{report}', [ReportController::class, 'show'])->name('reports.show');
 });
 
-// Route Profile
+// --- ROUTE PROFILE ---
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route Admin
+// --- ROUTE ADMIN ---
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
