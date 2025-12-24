@@ -128,7 +128,7 @@
 
         <div class="mt-16 text-center border-t border-gray-100 pt-8">
             <p class="text-sm text-gray-400">
-                &copy; {{ date('Y') }} KotaKita Surabaya. Dikembangkan dengan semangat 🐊
+                &copy; {{ date('Y') }} KotaKita Surabaya.
             </p>
         </div>
 
