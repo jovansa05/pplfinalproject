@@ -49,4 +49,18 @@ class ReportController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Laporan Berhasil Dikirim!');
     }
+
+    public function show(Report $report)
+    {
+        // Keamanan: Pastikan user cuma bisa lihat laporannya sendiri
+        // Kalau user A mencoba buka laporan user B, tolak aksesnya (403)
+        if ($report->user_id !== Auth::id()) {
+            abort(403, 'Maaf, Anda tidak berhak melihat detail laporan ini.');
+        }
+
+        // Muat data kategori agar nama kategorinya muncul di view
+        $report->load('category');
+
+        return view('reports.show', compact('report'));
+    }
 }

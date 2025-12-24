@@ -148,19 +148,64 @@
                     <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                         ⚙️ Ubah Status
                     </h3>
-                    <form action="{{ route('admin.reports.updateStatus', $report) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-                        <select name="status" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent mb-4">
-                            <option value="pending" {{ $report->status == 'pending' ? 'selected' : '' }}>Menunggu</option>
-                            <option value="proses" {{ $report->status == 'proses' ? 'selected' : '' }}>Diproses</option>
-                            <option value="selesai" {{ $report->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
-                            <option value="ditolak" {{ $report->status == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
-                        </select>
-                        <button type="submit" class="w-full px-4 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition">
-                            Perbarui Status
-                        </button>
-                    </form>
+                    <form action="{{ route('admin.reports.updateStatus', $report->id) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PATCH')
+                            
+                            <label class="block text-xs font-bold text-indigo-200 uppercase mb-2">Pilih Status Baru</label>
+                            <select name="status" id="statusSelect" onchange="toggleInputs()" class="w-full px-4 py-3 border-none rounded-xl text-gray-800 focus:ring-4 focus:ring-indigo-400 mb-4 font-bold cursor-pointer">
+                                <option value="pending" {{ $report->status == 'pending' ? 'selected' : '' }}>Menunggu</option>
+                                <option value="proses" {{ $report->status == 'proses' ? 'selected' : '' }}>Diproses</option>
+                                <option value="selesai" {{ $report->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                <option value="ditolak" {{ $report->status == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                            </select>
+
+                            {{-- Input Tambahan (Hidden by Default) --}}
+                            <div id="additionalInput" class="hidden space-y-3 mb-4 bg-indigo-800 p-3 rounded-lg border border-indigo-500">
+                                
+                                {{-- Label Dinamis --}}
+                                <label id="noteLabel" class="block text-xs font-bold text-white uppercase">Catatan Admin</label>
+                                <textarea name="admin_note" id="adminNote" rows="3" class="w-full rounded-lg border-gray-300 text-gray-900 text-sm p-2" placeholder="Tulis alasan atau tanggapan..."></textarea>
+
+                                {{-- Upload Bukti (Khusus Selesai) --}}
+                                <div id="proofInput" class="hidden">
+                                    <label class="block text-xs font-bold text-white uppercase mb-1">Upload Bukti Penyelesaian (Foto)</label>
+                                    <input type="file" name="completion_proof" class="block w-full text-sm text-indigo-100 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full px-4 py-3 bg-white text-indigo-700 font-bold rounded-xl hover:bg-gray-50 transition shadow-lg transform hover:-translate-y-0.5">
+                                Update Status 📧
+                            </button>
+                        </form>
+
+                        {{-- Script Sederhana untuk Show/Hide --}}
+                        <script>
+                            function toggleInputs() {
+                                const status = document.getElementById('statusSelect').value;
+                                const container = document.getElementById('additionalInput');
+                                const proofDiv = document.getElementById('proofInput');
+                                const noteLabel = document.getElementById('noteLabel');
+                                const noteInput = document.getElementById('adminNote');
+
+                                // Reset
+                                container.classList.add('hidden');
+                                proofDiv.classList.add('hidden');
+                                noteInput.removeAttribute('required');
+
+                                if (status === 'ditolak') {
+                                    container.classList.remove('hidden');
+                                    noteLabel.innerText = "Alasan Penolakan (Wajib)";
+                                    noteInput.setAttribute('required', 'required'); // Wajib isi
+                                } 
+                                else if (status === 'selesai') {
+                                    container.classList.remove('hidden');
+                                    proofDiv.classList.remove('hidden');
+                                    noteLabel.innerText = "Tanggapan Penyelesaian";
+                                    // noteInput.setAttribute('required', 'required'); // Opsional, tergantung maumu
+                                }
+                            }
+                        </script>
                 </div>
 
             </div>
