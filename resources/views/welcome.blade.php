@@ -118,7 +118,7 @@
             </div>
             <div class="text-center md:text-right text-gray-400 text-sm">
                 <p>&copy; 2025 Sistem Informasi - Telkom University Surabaya.</p>
-                <p class="mt-1">Dibuat untuk Kota Pahlawan.</p>
+                <p class="mt-1">Dibuat untuk Kota Pahlawan Surabaya.</p>
             </div>
         </div>
     </footer>
