@@ -48,6 +48,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // 👇 INI ROUTE BARU (Halaman Detail Laporan)
     Route::get('/laporan/detail/{report}', [ReportController::class, 'show'])->name('reports.show');
+    
+    // Route untuk submit rating/feedback
+    Route::post('/laporan/{report}/rating', [ReportController::class, 'submitRating'])->name('reports.rating');
 });
 
 // --- ROUTE PROFILE ---

@@ -7,6 +7,7 @@ use App\Models\Report;
 use App\Models\Category;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportStatusChanged;
@@ -15,7 +16,7 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Report::with(['user.kecamatan', 'user.kelurahan', 'category']);
+        $query = Report::with(['user.kecamatan', 'user.kelurahan', 'category', 'ratings']);
 
         // Filter Kategori
         if ($request->filled('category')) {
@@ -66,7 +67,13 @@ class ReportController extends Controller
     public function show(Report $report)
     {
         $report->load(['user', 'category']);
-        return view('admin.reports.show', compact('report'));
+        
+        // Load rating dari pelapor untuk laporan ini
+        $rating = Rating::where('report_id', $report->id)
+            ->where('user_id', $report->user_id)
+            ->first();
+        
+        return view('admin.reports.show', compact('report', 'rating'));
     }
 
     // --- BAGIAN PENTING YANG HARUS DIPERBAIKI ---
