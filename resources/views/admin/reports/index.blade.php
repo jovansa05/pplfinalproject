@@ -29,48 +29,82 @@
         
         {{-- Filter Section --}}
         <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
-            <form action="{{ route('admin.reports.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {{-- Search --}}
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Cari</label>
-                    <input type="text" name="search" value="{{ request('search') }}" 
-                           placeholder="No. Tiket, lokasi, deskripsi..." 
-                           class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+            <form action="{{ route('admin.reports.index') }}" method="GET" id="filterForm">
+                {{-- Row 1: Search, Category, Status --}}
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    {{-- Search --}}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Cari</label>
+                        <input type="text" name="search" value="{{ request('search') }}" 
+                               placeholder="No. Tiket, lokasi, deskripsi..." 
+                               class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    </div>
+
+                    {{-- Category Filter --}}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Kategori</label>
+                        <select name="category" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <option value="">Semua Kategori</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Status Filter --}}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Status</label>
+                        <select name="status" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <option value="">Semua Status</option>
+                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
+                            <option value="proses" {{ request('status') == 'proses' ? 'selected' : '' }}>Diproses</option>
+                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                            <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                        </select>
+                    </div>
+
+                    {{-- Buttons --}}
+                    <div class="flex items-end gap-2">
+                        <button type="submit" class="flex-1 px-4 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition">
+                            Filter
+                        </button>
+                        <a href="{{ route('admin.reports.index') }}" class="px-4 py-2 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 transition">
+                            Reset
+                        </a>
+                    </div>
                 </div>
 
-                {{-- Category Filter --}}
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Kategori</label>
-                    <select name="category" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                        <option value="">Semua Kategori</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                {{-- Row 2: Wilayah Filters --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {{-- Kecamatan Filter --}}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Kecamatan (Wilayah)</label>
+                        <select name="kecamatan" id="kecamatanFilter" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <option value="">Semua Kecamatan</option>
+                            @foreach($kecamatans as $kecamatan)
+                                <option value="{{ $kecamatan->id }}" {{ request('kecamatan') == $kecamatan->id ? 'selected' : '' }}>
+                                    {{ $kecamatan->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                {{-- Status Filter --}}
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Status</label>
-                    <select name="status" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                        <option value="">Semua Status</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
-                        <option value="proses" {{ request('status') == 'proses' ? 'selected' : '' }}>Diproses</option>
-                        <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
-                        <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
-                    </select>
-                </div>
-
-                {{-- Buttons --}}
-                <div class="flex items-end gap-2">
-                    <button type="submit" class="flex-1 px-4 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition">
-                        Filter
-                    </button>
-                    <a href="{{ route('admin.reports.index') }}" class="px-4 py-2 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 transition">
-                        Reset
-                    </a>
+                    {{-- Kelurahan Filter --}}
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Kelurahan (Wilayah)</label>
+                        <select name="kelurahan" id="kelurahanFilter" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent" {{ !request('kecamatan') ? 'disabled' : '' }}>
+                            <option value="">Semua Kelurahan</option>
+                            @if(request('kecamatan'))
+                                @foreach($kelurahans as $kelurahan)
+                                    <option value="{{ $kelurahan->id }}" {{ request('kelurahan') == $kelurahan->id ? 'selected' : '' }}>
+                                        {{ $kelurahan->name }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
                 </div>
             </form>
         </div>
@@ -98,6 +132,7 @@
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tiket</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Pelapor</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kategori</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Wilayah</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lokasi</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tanggal</th>
@@ -127,6 +162,18 @@
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-700">
                                     {{ $report->category->name ?? 'Lainnya' }}
                                 </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($report->user && ($report->user->kecamatan || $report->user->kelurahan))
+                                    <div class="text-sm">
+                                        <span class="font-medium text-gray-900">{{ $report->user->kecamatan->name ?? '-' }}</span>
+                                        @if($report->user->kelurahan)
+                                            <p class="text-xs text-gray-500">{{ $report->user->kelurahan->name }}</p>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="text-sm text-gray-400">-</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 <span class="text-sm text-gray-900">{{ Str::limit($report->location, 30) }}</span>
@@ -170,7 +217,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center">
+                            <td colspan="8" class="px-6 py-12 text-center">
                                 <div class="text-gray-400">
                                     <p class="text-4xl mb-2">📭</p>
                                     <p class="font-medium">Tidak ada laporan ditemukan</p>
@@ -191,4 +238,36 @@
         </div>
 
     </div>
+
+    @push('scripts')
+    <script>
+        // Handle dynamic kelurahan filter based on kecamatan selection
+        document.getElementById('kecamatanFilter').addEventListener('change', function() {
+            const kecamatanId = this.value;
+            const kelurahanFilter = document.getElementById('kelurahanFilter');
+            const form = document.getElementById('filterForm');
+            
+            if (kecamatanId) {
+                // Fetch kelurahans for selected kecamatan
+                fetch(`{{ route('admin.kelurahans.index') }}?kecamatan_id=${kecamatanId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        kelurahanFilter.innerHTML = '<option value="">Semua Kelurahan</option>';
+                        data.forEach(kelurahan => {
+                            kelurahanFilter.innerHTML += `<option value="${kelurahan.id}">${kelurahan.name}</option>`;
+                        });
+                        kelurahanFilter.disabled = false;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching kelurahans:', error);
+                        kelurahanFilter.innerHTML = '<option value="">Semua Kelurahan</option>';
+                        kelurahanFilter.disabled = false;
+                    });
+            } else {
+                kelurahanFilter.innerHTML = '<option value="">Semua Kelurahan</option>';
+                kelurahanFilter.disabled = true;
+            }
+        });
+    </script>
+    @endpush
 </x-app-layout>

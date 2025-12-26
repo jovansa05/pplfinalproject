@@ -24,10 +24,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        // Jika di database kamu SUDAH ada kolom kecamatan/kelurahan, aktifkan baris ini:
-        // 'kecamatan_id',
-        // 'kelurahan_id',
-        // 'role',
+        'kecamatan_id',
+        'kelurahan_id',
+        'role',
     ];
 
     /**
@@ -49,6 +48,22 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Relationships
+    public function kecamatan()
+    {
+        return $this->belongsTo(Kecamatan::class);
+    }
+
+    public function kelurahan()
+    {
+        return $this->belongsTo(Kelurahan::class);
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
 
     // NOTE: Fungsi-fungsi JWT (getJWTIdentifier, dll) SAYA HAPUS DULU
     // karena library-nya belum diinstall. Nanti kalau sudah install JWT, baru ditambahin lagi.

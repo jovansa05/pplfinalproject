@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Models\Kelurahan; 
 use App\Models\Report;    
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/{report}', [AdminReportController::class, 'show'])->name('reports.show');
     Route::patch('/reports/{report}/status', [AdminReportController::class, 'updateStatus'])->name('reports.updateStatus');
+    
+    // Route untuk mendapatkan kelurahan berdasarkan kecamatan (untuk filter)
+    Route::get('/kelurahans', function (Request $request) {
+        $kecamatanId = $request->get('kecamatan_id');
+        if (!$kecamatanId) {
+            return response()->json([]);
+        }
+        return response()->json(
+            Kelurahan::where('kecamatan_id', $kecamatanId)
+                ->orderBy('name')
+                ->get(['id', 'name'])
+        );
+    })->name('kelurahans.index');
 });
 
 require __DIR__.'/auth.php';
