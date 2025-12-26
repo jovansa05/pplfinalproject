@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Report;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -58,9 +59,52 @@ class ReportController extends Controller
             abort(403, 'Maaf, Anda tidak berhak melihat detail laporan ini.');
         }
 
-        // Muat data kategori agar nama kategorinya muncul di view
+        // Muat data kategori
         $report->load('category');
+        
+        // Load rating user untuk laporan ini
+        $userRating = Rating::where('report_id', $report->id)
+            ->where('user_id', Auth::id())
+            ->first();
 
-        return view('reports.show', compact('report'));
+        return view('reports.show', compact('report', 'userRating'));
+    }
+
+    public function submitRating(Request $request, Report $report)
+    {
+        // Keamanan: Pastikan user cuma bisa rating laporannya sendiri
+        if ($report->user_id !== Auth::id()) {
+            abort(403, 'Maaf, Anda tidak berhak memberikan rating pada laporan ini.');
+        }
+
+        // Pastikan laporan sudah selesai
+        if ($report->status !== 'selesai') {
+            return back()->with('error', 'Anda hanya dapat memberikan rating pada laporan yang sudah selesai.');
+        }
+
+        // Cek apakah user sudah memberikan rating sebelumnya
+        $existingRating = Rating::where('report_id', $report->id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if ($existingRating) {
+            return back()->with('error', 'Anda sudah memberikan rating untuk laporan ini.');
+        }
+
+        // Validasi
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+
+        // Simpan rating
+        Rating::create([
+            'report_id' => $report->id,
+            'user_id' => Auth::id(),
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return back()->with('success', 'Terima kasih! Rating Anda telah tersimpan.');
     }
 }

@@ -143,6 +143,59 @@
                     </div>
                 </div>
 
+                {{-- Rating & Feedback dari Pelapor --}}
+                @if($report->status == 'selesai' && isset($rating) && $rating)
+                    <div class="bg-yellow-50 border-2 border-yellow-200 rounded-2xl shadow-xl p-6">
+                        <h3 class="text-lg font-bold text-yellow-800 mb-4 flex items-center gap-2">
+                            ⭐ Rating & Feedback Pelapor
+                        </h3>
+                        <div class="bg-white p-5 rounded-xl border border-yellow-200 shadow-sm">
+                            {{-- Rating Stars --}}
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="flex items-center gap-1">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= $rating->rating)
+                                            <svg class="w-7 h-7 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                                            </svg>
+                                        @else
+                                            <svg class="w-7 h-7 text-gray-300 fill-current" viewBox="0 0 20 20">
+                                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                                            </svg>
+                                        @endif
+                                    @endfor
+                                </div>
+                                <span class="text-2xl font-bold text-yellow-600">{{ $rating->rating }}.0</span>
+                            </div>
+                            
+                            {{-- Comment/Feedback --}}
+                            @if($rating->comment)
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-3">
+                                    <p class="text-sm text-gray-600 italic leading-relaxed">"{{ $rating->comment }}"</p>
+                                </div>
+                            @else
+                                <p class="text-sm text-gray-500 italic mb-3">Tidak ada komentar tambahan</p>
+                            @endif
+                            
+                            {{-- Timestamp --}}
+                            <p class="text-xs text-gray-500">
+                                Diberikan pada {{ $rating->created_at->translatedFormat('d F Y, H:i') }} WIB
+                            </p>
+                        </div>
+                    </div>
+                @elseif($report->status == 'selesai')
+                    <div class="bg-gray-50 border border-gray-200 rounded-2xl shadow-xl p-6">
+                        <h3 class="text-lg font-bold text-gray-600 mb-4 flex items-center gap-2">
+                            ⭐ Rating & Feedback
+                        </h3>
+                        <div class="bg-white p-5 rounded-xl border border-gray-200">
+                            <p class="text-sm text-gray-500 text-center italic">
+                                Belum ada rating dari pelapor
+                            </p>
+                        </div>
+                    </div>
+                @endif
+
                 {{-- Update Status --}}
                 <div class="bg-white rounded-2xl shadow-xl p-6">
                     <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">

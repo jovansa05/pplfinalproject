@@ -135,6 +135,7 @@
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Wilayah</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lokasi</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Rating</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tanggal</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
                         </tr>
@@ -199,6 +200,23 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
+                                @php
+                                    $userRating = $report->ratings->where('user_id', $report->user_id)->first();
+                                @endphp
+                                @if($report->status == 'selesai' && $userRating)
+                                    <div class="flex items-center gap-1">
+                                        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                                        </svg>
+                                        <span class="text-sm font-bold text-gray-800">{{ $userRating->rating }}</span>
+                                    </div>
+                                @elseif($report->status == 'selesai')
+                                    <span class="text-xs text-gray-400 italic">Belum ada</span>
+                                @else
+                                    <span class="text-xs text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="text-sm text-gray-500">{{ $report->created_at->format('d M Y') }}</span>
                                 <p class="text-xs text-gray-400">{{ $report->created_at->format('H:i') }} WIB</p>
                             </td>
@@ -217,7 +235,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-12 text-center">
+                            <td colspan="9" class="px-6 py-12 text-center">
                                 <div class="text-gray-400">
                                     <p class="text-4xl mb-2">📭</p>
                                     <p class="font-medium">Tidak ada laporan ditemukan</p>
