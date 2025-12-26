@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use App\Models\Rating;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportStatusChanged;
@@ -103,9 +104,9 @@ class ReportController extends Controller
             'admin_note' => $request->admin_note, // INI PENTING: Simpan Catatan
         ];
 
-        // 3. Proses Upload Foto (INI YANG KEMUNGKINAN HILANG DI KODINGANMU)
+        // 3. Proses Upload Foto dengan Kompresi
         if ($request->hasFile('completion_proof')) {
-            $path = $request->file('completion_proof')->store('proofs', 'public');
+            $path = ImageHelper::compressAndStore($request->file('completion_proof'), 'proofs', 75, 1920);
             $dataToUpdate['completion_proof'] = $path;
         }
 

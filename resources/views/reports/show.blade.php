@@ -5,7 +5,16 @@
                 
                 {{-- FOTO UTAMA (BESAR) --}}
                 <div class="relative h-64 md:h-96 w-full bg-gray-200">
-                    <img src="{{ asset('storage/' . $report->image) }}" class="w-full h-full object-cover">
+                    @if($report->imageExists())
+                        <img src="{{ $report->image_url }}" 
+                             alt="Foto Laporan" 
+                             class="w-full h-full object-cover"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/800x600?text=Foto+Tidak+Tersedia'">
+                    @else
+                        <div class="w-full h-full flex items-center justify-center bg-gray-300">
+                            <p class="text-gray-500 text-lg">Foto tidak tersedia</p>
+                        </div>
+                    @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     <div class="absolute bottom-6 left-6 text-white">
                         <span class="bg-indigo-600 px-3 py-1 rounded-lg text-xs font-bold shadow-lg mb-2 inline-block">
@@ -31,11 +40,14 @@
                                     "{{ $report->admin_note ?? 'Tindak lanjut telah selesai.' }}"
                                 </div>
                                 
-                                @if($report->completion_proof)
+                                @if($report->completionProofExists())
                                     <div>
                                         <p class="text-xs font-bold text-green-600 uppercase mb-2">Bukti Penyelesaian:</p>
-                                        <a href="{{ asset('storage/' . $report->completion_proof) }}" target="_blank">
-                                            <img src="{{ asset('storage/' . $report->completion_proof) }}" class="h-48 rounded-xl shadow-md border border-green-200 hover:scale-105 transition cursor-zoom-in">
+                                        <a href="{{ $report->completion_proof_url }}" target="_blank">
+                                            <img src="{{ $report->completion_proof_url }}" 
+                                                 alt="Bukti Penyelesaian" 
+                                                 class="h-48 rounded-xl shadow-md border border-green-200 hover:scale-105 transition cursor-zoom-in"
+                                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=Foto+Tidak+Tersedia'">
                                         </a>
                                     </div>
                                 @endif

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Report;
 use App\Models\Rating;
+use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -33,7 +34,8 @@ class ReportController extends Controller
             'image'       => 'required|image|max:5120',
         ]);
 
-        $path = $request->file('image')->store('reports', 'public');
+        // Compress and store image (quality 75%, max width 1920px)
+        $path = ImageHelper::compressAndStore($request->file('image'), 'reports', 75, 1920);
         $ticket = 'TKT-' . date('dmy') . '-' . strtoupper(Str::random(3));
 
         Report::create([
