@@ -114,12 +114,18 @@
                     <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                         📷 Bukti Foto
                     </h3>
-                    <a href="{{ asset('storage/' . $report->image) }}" target="_blank">
-                        <img src="{{ asset('storage/' . $report->image) }}" 
-                             alt="Bukti Laporan" 
-                             class="w-full max-w-md rounded-xl shadow-md hover:shadow-xl transition cursor-pointer"
-                             onerror="this.src='https://via.placeholder.com/400x300?text=Foto+Tidak+Tersedia'">
-                    </a>
+                    @if($report->imageExists())
+                        <a href="{{ $report->image_url }}" target="_blank">
+                            <img src="{{ $report->image_url }}" 
+                                 alt="Bukti Laporan" 
+                                 class="w-full max-w-md rounded-xl shadow-md hover:shadow-xl transition cursor-pointer"
+                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=Foto+Tidak+Tersedia'">
+                        </a>
+                    @else
+                        <div class="w-full max-w-md h-64 flex items-center justify-center bg-gray-100 rounded-xl border-2 border-dashed border-gray-300">
+                            <p class="text-gray-500">Foto tidak tersedia</p>
+                        </div>
+                    @endif
                 </div>
 
             </div>

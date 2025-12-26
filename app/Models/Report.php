@@ -38,4 +38,52 @@ class Report extends Model
     {
         return $this->hasMany(Rating::class);
     }
+
+    /**
+     * Get full URL for image
+     */
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+        
+        return asset('storage/' . $this->image);
+    }
+
+    /**
+     * Check if image file exists
+     */
+    public function imageExists()
+    {
+        if (!$this->image) {
+            return false;
+        }
+        
+        return \Storage::disk('public')->exists($this->image);
+    }
+
+    /**
+     * Get full URL for completion proof
+     */
+    public function getCompletionProofUrlAttribute()
+    {
+        if (!$this->completion_proof) {
+            return null;
+        }
+        
+        return asset('storage/' . $this->completion_proof);
+    }
+
+    /**
+     * Check if completion proof file exists
+     */
+    public function completionProofExists()
+    {
+        if (!$this->completion_proof) {
+            return false;
+        }
+        
+        return \Storage::disk('public')->exists($this->completion_proof);
+    }
 }
