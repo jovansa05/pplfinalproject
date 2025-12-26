@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Report;
 use App\Models\Category;
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportStatusChanged;
@@ -13,15 +15,33 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Report::with(['user', 'category']);
+        $query = Report::with(['user.kecamatan', 'user.kelurahan', 'category']);
 
-        // Filter
+        // Filter Kategori
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
+        
+        // Filter Status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+        
+        // Filter Kecamatan (Wilayah)
+        if ($request->filled('kecamatan')) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('kecamatan_id', $request->kecamatan);
+            });
+        }
+        
+        // Filter Kelurahan (Wilayah)
+        if ($request->filled('kelurahan')) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('kelurahan_id', $request->kelurahan);
+            });
+        }
+        
+        // Filter Search
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -32,10 +52,15 @@ class ReportController extends Controller
         }
 
         $reports = $query->latest()->paginate(10)->withQueryString();
-        // Kalau error "Method active not found", ganti jadi Category::all();
+        
+        // Data untuk dropdown filter
         $categories = Category::active()->get();
+        $kecamatans = Kecamatan::orderBy('name')->get();
+        $kelurahans = $request->filled('kecamatan') 
+            ? Kelurahan::where('kecamatan_id', $request->kecamatan)->orderBy('name')->get()
+            : collect([]);
 
-        return view('admin.reports.index', compact('reports', 'categories'));
+        return view('admin.reports.index', compact('reports', 'categories', 'kecamatans', 'kelurahans'));
     }
 
     public function show(Report $report)
