@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Report;
 use App\Models\Rating;
+use App\Models\Kecamatan;
 use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,16 +23,19 @@ class ReportController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('reports.create', compact('categories'));
+        $kecamatans = Kecamatan::orderBy('name')->get();
+        return view('reports.create', compact('categories', 'kecamatans'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'category_id' => 'required',
-            'location'    => 'required',
-            'description' => 'required',
-            'image'       => 'required|image|max:5120',
+            'category_id'  => 'required',
+            'kecamatan_id' => 'required|exists:kecamatans,id',
+            'kelurahan_id' => 'required|exists:kelurahans,id',
+            'location'     => 'required',
+            'description'  => 'required',
+            'image'        => 'required|image|max:5120',
         ]);
 
         // Compress and store image (quality 75%, max width 1920px)
@@ -40,17 +44,19 @@ class ReportController extends Controller
 
         Report::create([
             'ticket_number' => $ticket,
-            'user_id'     => Auth::id(),
-            'category_id' => $request->category_id,
-            'description' => $request->description,
-            'image'       => $path,       
-            'location'    => $request->location, 
-            'latitude'    => $request->latitude,
-            'longitude'   => $request->longitude,
-            'status'      => 'pending',
+            'user_id'       => Auth::id(),
+            'category_id'   => $request->category_id,
+            'kecamatan_id'  => $request->kecamatan_id,
+            'kelurahan_id'  => $request->kelurahan_id,
+            'description'   => $request->description,
+            'image'         => $path,       
+            'location'      => $request->location, 
+            'latitude'      => $request->latitude,
+            'longitude'     => $request->longitude,
+            'status'        => 'pending',
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Laporan Berhasil Dikirim!');
+        return redirect()->route('dashboard')->with('success', 'Laporan Berhasil Dikirim! Nomor Tiket: ' . $ticket);
     }
 
     public function show(Report $report)

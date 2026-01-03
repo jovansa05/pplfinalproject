@@ -44,6 +44,27 @@
                                     <h3 class="text-xl font-bold text-gray-800">Lokasi Kejadian</h3>
                                 </div>
                                 
+                                <!-- Kecamatan & Kelurahan -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kecamatan <span class="text-red-500">*</span></label>
+                                        <select id="kecamatan_id" name="kecamatan_id" required
+                                            class="block w-full border-gray-300 bg-gray-50 text-gray-900 rounded-lg focus:border-blue-500 focus:ring-blue-500 py-3 px-4 shadow-inner">
+                                            <option value="">-- Pilih Kecamatan --</option>
+                                            @foreach($kecamatans as $kecamatan)
+                                                <option value="{{ $kecamatan->id }}">{{ $kecamatan->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kelurahan <span class="text-red-500">*</span></label>
+                                        <select id="kelurahan_id" name="kelurahan_id" required disabled
+                                            class="block w-full border-gray-300 bg-gray-50 text-gray-900 rounded-lg focus:border-blue-500 focus:ring-blue-500 py-3 px-4 shadow-inner">
+                                            <option value="">-- Pilih Kecamatan Dulu --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
                                 <button type="button" onclick="getLocation()" class="mb-4 flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-bold shadow-md w-fit text-sm">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                     Ambil Lokasi Saya (GPS)
@@ -57,7 +78,7 @@
                                         <span class="text-gray-400">📍</span>
                                     </div>
                                     <input id="location" class="block w-full pl-10 border-gray-300 bg-gray-50 text-gray-900 rounded-lg focus:border-blue-500 focus:ring-blue-500 py-3" 
-                                        type="text" name="location" required placeholder="Nama jalan, gedung, atau patokan..." />
+                                        type="text" name="location" required placeholder="Nama jalan, gedung, atau patokan (contoh: Jl. Sudirman No. 123)..." />
                                 </div>
                             </div>
 
@@ -164,5 +185,36 @@
         function showError(error) {
             document.getElementById('gps-status').innerHTML = "❌ Gagal mengambil lokasi.";
         }
+
+        // Handle dynamic kelurahan dropdown based on kecamatan selection
+        document.getElementById('kecamatan_id').addEventListener('change', function() {
+            const kecamatanId = this.value;
+            const kelurahanSelect = document.getElementById('kelurahan_id');
+            
+            if (kecamatanId) {
+                // Fetch kelurahans for selected kecamatan
+                fetch(`{{ route('kelurahans.index') }}?kecamatan_id=${kecamatanId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        kelurahanSelect.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
+                        data.forEach(kelurahan => {
+                            kelurahanSelect.innerHTML += `<option value="${kelurahan.id}">${kelurahan.name}</option>`;
+                        });
+                        kelurahanSelect.disabled = false;
+                        kelurahanSelect.classList.remove('bg-gray-100');
+                        kelurahanSelect.classList.add('bg-gray-50');
+                    })
+                    .catch(error => {
+                        console.error('Error fetching kelurahans:', error);
+                        kelurahanSelect.innerHTML = '<option value="">-- Error memuat kelurahan --</option>';
+                        kelurahanSelect.disabled = true;
+                    });
+            } else {
+                kelurahanSelect.innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
+                kelurahanSelect.disabled = true;
+                kelurahanSelect.classList.add('bg-gray-100');
+                kelurahanSelect.classList.remove('bg-gray-50');
+            }
+        });
     </script>
 </x-app-layout>

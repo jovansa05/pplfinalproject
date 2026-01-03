@@ -20,10 +20,23 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route untuk AJAX Wilayah
+// Route untuk AJAX Wilayah (public untuk form laporan)
 Route::get('/get-villages/{id}', function ($id) {
-    return Kelurahan::where('kecamatan_id', $id)->get();
+    return Kelurahan::where('kecamatan_id', $id)->orderBy('name')->get(['id', 'name']);
 });
+
+// Route untuk mendapatkan kelurahan berdasarkan kecamatan (untuk form laporan)
+Route::get('/kelurahans', function (Request $request) {
+    $kecamatanId = $request->get('kecamatan_id');
+    if (!$kecamatanId) {
+        return response()->json([]);
+    }
+    return response()->json(
+        Kelurahan::where('kecamatan_id', $kecamatanId)
+            ->orderBy('name')
+            ->get(['id', 'name'])
+    );
+})->name('kelurahans.index');
 
 // --- ROUTE UNTUK USER (WARGA) ---
 Route::middleware(['auth', 'verified'])->group(function () {
