@@ -19,6 +19,8 @@ class Report extends Model
         'location',     
         'latitude',
         'longitude',
+        'kecamatan_id',
+        'kelurahan_id',
         'status',
         'admin_note',
         'completion_proof',
@@ -37,6 +39,16 @@ class Report extends Model
     public function ratings()
     {
         return $this->hasMany(Rating::class);
+    }
+
+    public function kecamatan()
+    {
+        return $this->belongsTo(Kecamatan::class);
+    }
+
+    public function kelurahan()
+    {
+        return $this->belongsTo(Kelurahan::class);
     }
 
     /**
