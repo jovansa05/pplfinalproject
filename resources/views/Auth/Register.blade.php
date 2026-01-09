@@ -61,31 +61,25 @@
                 <!-- Kecamatan & Kelurahan -->
                 <div class="flex gap-3">
                     <div class="flex-1">
-                        <label class="block text-green-900 font-semibold text-sm">Kecamatan</label>
-                        <select name="kecamatan" required
+                        <label class="block text-green-900 font-semibold text-sm">Kecamatan <span class="text-red-500">*</span></label>
+                        <select id="kecamatan_id" name="kecamatan_id" required
                             class="w-full mt-1 p-2 rounded-xl bg-white/85 text-gray-900 
                                    focus:ring-2 focus:ring-green-500 border-0 shadow-sm">
-                            <option>Pilih</option>
-                            <option>Wonokromo</option>
-                            <option>Tegalsari</option>
-                            <option>Genteng</option>
-                            <option>Rungkut</option>
-                            <option>Sukolilo</option>
-                            <option>Tambaksari</option>
+                            <option value="">-- Pilih Kecamatan --</option>
+                            @if(isset($districts))
+                                @foreach($districts as $kecamatan)
+                                    <option value="{{ $kecamatan->id }}">{{ $kecamatan->name }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
 
                     <div class="flex-1">
-                        <label class="block text-green-900 font-semibold text-sm">Kelurahan</label>
-                        <select name="kelurahan" required
+                        <label class="block text-green-900 font-semibold text-sm">Kelurahan <span class="text-red-500">*</span></label>
+                        <select id="kelurahan_id" name="kelurahan_id" required disabled
                             class="w-full mt-1 p-2 rounded-xl bg-white/85 text-gray-900
                                    focus:ring-2 focus:ring-green-500 border-0 shadow-sm">
-                            <option>Pilih</option>
-                            <option>Wonokromo</option>
-                            <option>Keputih</option>
-                            <option>Kali Rungkut</option>
-                            <option>Pacarkeling</option>
-                            <option>Kapasan</option>
+                            <option value="">-- Pilih Kecamatan Dulu --</option>
                         </select>
                     </div>
                 </div>
@@ -104,5 +98,34 @@
             </p>
         </div>
     </div>
+
+    <script>
+        // Handle dynamic kelurahan dropdown based on kecamatan selection
+        document.getElementById('kecamatan_id').addEventListener('change', function() {
+            const kecamatanId = this.value;
+            const kelurahanSelect = document.getElementById('kelurahan_id');
+            
+            if (kecamatanId) {
+                // Fetch kelurahans for selected kecamatan
+                fetch(`{{ route('kelurahans.index') }}?kecamatan_id=${kecamatanId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        kelurahanSelect.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
+                        data.forEach(kelurahan => {
+                            kelurahanSelect.innerHTML += `<option value="${kelurahan.id}">${kelurahan.name}</option>`;
+                        });
+                        kelurahanSelect.disabled = false;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching kelurahans:', error);
+                        kelurahanSelect.innerHTML = '<option value="">-- Error memuat kelurahan --</option>';
+                        kelurahanSelect.disabled = true;
+                    });
+            } else {
+                kelurahanSelect.innerHTML = '<option value="">-- Pilih Kecamatan Dulu --</option>';
+                kelurahanSelect.disabled = true;
+            }
+        });
+    </script>
 </body>
 </html>
